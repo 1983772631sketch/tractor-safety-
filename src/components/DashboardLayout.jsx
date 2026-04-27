@@ -1,62 +1,91 @@
 import React from 'react';
-import { Activity, ShieldCheck, Database } from 'lucide-react';
+import { Activity, ShieldCheck, Database, LayoutGrid, Terminal, Cpu } from 'lucide-react';
+import { motion } from 'framer-motion';
 
 export const DashboardLayout = ({ children, mode, setMode }) => {
   return (
-    <div className="min-h-screen selection:bg-brand-primary selection:text-white p-6 md:p-10">
-      <div className="max-w-7xl mx-auto">
-        <header className="mb-12 flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
-          <div className="animate-float">
-            <div className="flex items-center gap-3 mb-2">
-              <div className="p-2 bg-brand-primary/10 rounded-xl border border-brand-primary/20">
-                <ShieldCheck className="text-brand-primary" size={24} />
+    <div className="p-4 md:p-8 lg:p-12">
+      <div className="max-w-[1600px] mx-auto">
+        <header className="mb-12 flex flex-col xl:flex-row items-start xl:items-center justify-between gap-8">
+          <motion.div 
+            initial={{ x: -50, opacity: 0 }}
+            animate={{ x: 0, opacity: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+          >
+            <div className="flex items-center gap-4 mb-4">
+              <div className="p-3 bg-neon-cyan/10 rounded-2xl border border-neon-cyan/20 neon-glow-cyan">
+                <ShieldCheck className="text-neon-cyan" size={32} />
               </div>
-              <h1 className="text-4xl font-black tracking-tighter glow-text italic">
-                TRACTOR<span className="text-brand-primary">_OS</span>
-              </h1>
+              <div>
+                <h1 className="text-4xl lg:text-5xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-neon-cyan/50">
+                  TRACTOR SAFETY SYSTEM
+                </h1>
+                <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.3em] text-slate-500 mt-1">
+                  <span className="flex items-center gap-2">
+                    <div className="w-2 h-2 rounded-full bg-neon-emerald animate-pulse" />
+                    CORE_OS SYSTEM_LIVE
+                  </span>
+                  <span className="text-slate-800">|</span>
+                  <span className="flex items-center gap-2 uppercase">
+                    <Database size={10} />
+                    DB_V4.8.5_STABLE
+                  </span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-4 text-slate-400 text-sm font-medium">
-              <span className="flex items-center gap-1.5">
-                <Activity size={14} className="text-brand-success" />
-                SYSTEM LIVE
-              </span>
-              <span className="w-1 h-1 rounded-full bg-slate-700" />
-              <span className="flex items-center gap-1.5">
-                <Database size={14} />
-                V4.2.0-STABLE
-              </span>
+          </motion.div>
+
+          <motion.div 
+            initial={{ y: -20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+            className="flex flex-wrap items-center gap-6"
+          >
+            <div className="flex items-center gap-2 p-1.5 bg-carbon-900/60 backdrop-blur-xl rounded-2xl border border-glass-border">
+              {['demo', 'api', 'serial'].map((m) => (
+                <button
+                  key={m}
+                  onClick={() => setMode(m)}
+                  className={`
+                    px-6 py-2.5 rounded-xl text-[10px] font-black transition-all duration-300 uppercase tracking-[0.3em]
+                    ${mode === m 
+                      ? 'bg-neon-cyan text-deep-space shadow-[0_0_20px_rgba(34,211,238,0.4)] scale-105' 
+                      : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                    }
+                  `}
+                >
+                  {m}
+                </button>
+              ))}
             </div>
-          </div>
 
-          <div className="flex items-center gap-3 p-1.5 bg-dark-surface/50 backdrop-blur-md rounded-2xl border border-white/5">
-            {['demo', 'api', 'serial'].map((m) => (
-              <button
-                key={m}
-                onClick={() => setMode(m)}
-                className={`
-                  px-4 py-2 rounded-xl text-xs font-bold transition-all duration-300 uppercase tracking-widest
-                  ${mode === m 
-                    ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/20 scale-105' 
-                    : 'text-slate-500 hover:text-slate-300'
-                  }
-                `}
-              >
-                {m}
-              </button>
-            ))}
-          </div>
-
-          {children.headerActions}
+            {children.headerActions}
+          </motion.div>
         </header>
 
-        <main className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <motion.main 
+          initial={{ opacity: 0, y: 40 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+        >
           {children.main}
-        </main>
+        </motion.main>
         
-        <footer className="mt-16 text-center text-slate-600 text-xs font-medium tracking-widest uppercase">
-          © 2026 ANTIGRAVITY DEFENSE SYSTEMS • ALL SYSTEMS OPERATIONAL
+        <footer className="mt-20 flex flex-col md:flex-row items-center justify-between border-t border-glass-border pt-10 text-[10px] font-black tracking-[0.5em] text-slate-700 uppercase pb-10">
+          <div className="flex items-center gap-8 mb-4 md:mb-0">
+            <span>© 2026 ANTIGRAVITY</span>
+            <span className="hidden md:inline text-slate-800">|</span>
+            <span>SECURE_DATA_STREAM_ENCRYPTED</span>
+          </div>
+          <div className="flex items-center gap-4">
+            <Cpu size={12} />
+            <Terminal size={12} />
+            <LayoutGrid size={12} />
+          </div>
         </footer>
       </div>
     </div>
   );
 };
+

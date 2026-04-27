@@ -1,81 +1,136 @@
 import React from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThreshold = 150, criticalThreshold = 50 }) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
   
-  // Determine color based on distance
-  let color = '#4ade80'; // brand-success
-  let status = 'Safe';
+  // Determine color based on value
+  let color = 'var(--color-neon-cyan)';
+  let glowClass = 'neon-glow-cyan';
+  let status = 'NOMINAL';
+  let textColor = 'text-neon-cyan';
   
   if (value <= criticalThreshold) {
-    color = '#f87171'; // brand-danger
-    status = 'Danger';
+    color = 'var(--color-neon-danger)';
+    glowClass = 'neon-glow-danger';
+    status = 'CRITICAL';
+    textColor = 'text-neon-danger';
   } else if (value <= warningThreshold) {
-    color = '#facc15'; // brand-warning
-    status = 'Warning';
+    color = 'var(--color-neon-amber)';
+    glowClass = 'neon-glow-amber';
+    status = 'WARNING';
+    textColor = 'text-neon-amber';
   }
 
-  const radius = 60;
+  const radius = 64;
   const circumference = 2 * Math.PI * radius;
   const strokeDashoffset = circumference - (percentage / 100) * circumference;
 
   return (
-    <div className="glass-card flex flex-col items-center justify-center p-8 relative overflow-hidden group">
+    <div className="hud-card group p-8 flex flex-col items-center justify-between min-h-[300px]">
+      <div className="w-full flex justify-between items-start mb-6">
+        <div>
+          <span className="data-label">{label}</span>
+          <div className={`text-[10px] font-black tracking-[0.2em] ${textColor} flex items-center gap-2`}>
+            <div className={`w-1.5 h-1.5 rounded-full ${status === 'CRITICAL' ? 'animate-ping' : ''}`} style={{ backgroundColor: color }} />
+            {status}
+          </div>
+        </div>
+        <div className="p-2 bg-white/5 rounded-lg border border-white/5 group-hover:border-white/10 transition-colors">
+          <div className="text-[10px] font-mono text-slate-500">REF_VAL: {max}</div>
+        </div>
+      </div>
       
-      {/* Background Glow */}
-      <div 
-        className="absolute inset-0 opacity-20 transition-colors duration-500 blur-3xl pointer-events-none"
-        style={{ backgroundColor: color }}
-      />
-
-      <h3 className="text-gray-400 text-sm font-semibold tracking-wider uppercase mb-6 z-10">{label}</h3>
-      
-      <div className="relative w-40 h-40 z-10">
-        <svg className="w-full h-full transform -rotate-90">
+      <div className="relative w-48 h-48">
+        <svg className="w-full h-full transform -rotate-90 filter drop-shadow-[0_0_15px_rgba(34,211,238,0.1)]">
           {/* Background circle */}
           <circle
-            cx="80"
-            cy="80"
+            cx="96"
+            cy="96"
             r={radius}
-            className="stroke-dark-border"
-            strokeWidth="12"
+            className="stroke-carbon-800"
+            strokeWidth="8"
+            fill="none"
+            strokeDasharray="4 4"
+          />
+          
+          {/* Subtle Outer Glow Ring */}
+          <circle
+            cx="96"
+            cy="96"
+            r={radius + 8}
+            className="stroke-white/5"
+            strokeWidth="1"
             fill="none"
           />
-          {/* Animated value circle */}
+
+          {/* Value Ring */}
           <motion.circle
-            cx="80"
-            cy="80"
+            cx="96"
+            cy="96"
             r={radius}
             stroke={color}
-            strokeWidth="12"
+            strokeWidth="8"
             fill="none"
             strokeLinecap="round"
             initial={{ strokeDashoffset: circumference }}
             animate={{ strokeDashoffset }}
-            transition={{ type: "spring", stiffness: 40, damping: 15 }}
+            transition={{ type: "spring", stiffness: 30, damping: 15 }}
             style={{ strokeDasharray: circumference }}
+            className={glowClass}
           />
+          
+          {/* Internal Ticks */}
+          {[...Array(12)].map((_, i) => (
+            <line
+              key={i}
+              x1="96"
+              y1="40"
+              x2="96"
+              y2="48"
+              stroke="currentColor"
+              strokeWidth="2"
+              className="text-slate-800"
+              transform={`rotate(${i * 30} 96 96)`}
+            />
+          ))}
         </svg>
         
-        {/* Center Text */}
+        {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <motion.span 
-            className="text-4xl font-bold font-mono tracking-tighter"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            key={value}
-          >
-            {value.toFixed(0)}
-          </motion.span>
-          <span className="text-gray-500 text-xs mt-1 font-semibold uppercase">{unit}</span>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={value}
+              initial={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
+              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
+              exit={{ opacity: 0, scale: 1.5, filter: 'blur(10px)' }}
+              className="flex flex-col items-center"
+            >
+              <span className={`data-value ${textColor} drop-shadow-2xl`}>
+                {value.toFixed(0)}
+              </span>
+              <span className="text-[10px] font-black text-slate-500 tracking-[0.4em] uppercase -mt-1">
+                {unit}
+              </span>
+            </motion.div>
+          </AnimatePresence>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center space-x-2 z-10">
-        <div className="w-2 h-2 rounded-full" style={{ backgroundColor: color }} />
-        <span className="text-sm font-medium" style={{ color }}>{status}</span>
+      {/* Decorative HUD bar at bottom */}
+      <div className="w-full h-1 bg-carbon-800 rounded-full mt-8 overflow-hidden relative">
+        <motion.div 
+          className="absolute inset-y-0 left-0 bg-gradient-to-r from-transparent via-white/20 to-transparent w-20"
+          animate={{ x: ['-100%', '300%'] }}
+          transition={{ duration: 3, repeat: Infinity, ease: "linear" }}
+        />
+        <motion.div 
+          className="h-full"
+          style={{ backgroundColor: color, width: `${percentage}%` }}
+          animate={{ width: `${percentage}%` }}
+        />
       </div>
     </div>
   );
 };
+

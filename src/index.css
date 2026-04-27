@@ -1,75 +1,96 @@
 @import "tailwindcss";
 
 @theme {
-  /* Colors - Sophisticated Dark Palette */
-  --color-dark-bg: #030712;
-  --color-dark-surface: #111827;
-  --color-dark-border: #1f2937;
+  /* Futuristic HUD Palette */
+  --color-deep-space: #020617;
+  --color-carbon-900: #0f172a;
+  --color-carbon-800: #1e293b;
   
-  --color-brand-primary: #0ea5e9;
-  --color-brand-success: #10b981;
-  --color-brand-warning: #f59e0b;
-  --color-brand-danger: #ef4444;
+  --color-neon-cyan: #22d3ee;
+  --color-neon-blue: #3b82f6;
+  --color-neon-amber: #fbbf24;
+  --color-neon-danger: #f43f5e;
+  --color-neon-emerald: #10b981;
   
-  /* Accents */
-  --color-accent-glow: rgba(14, 165, 233, 0.15);
+  /* Glassmorphism */
+  --color-glass-white: rgba(255, 255, 255, 0.03);
+  --color-glass-border: rgba(255, 255, 255, 0.08);
   
   /* Fonts */
-  --font-sans: 'Inter', system-ui, sans-serif;
-  --font-mono: 'JetBrains Mono', monospace;
+  --font-sans: 'Outfit', 'Inter', system-ui, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
 }
 
 @layer base {
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;900&family=JetBrains+Mono:wght@400;700&display=swap');
+
   body {
-    @apply bg-dark-bg text-slate-200 antialiased selection:bg-brand-primary/30 selection:text-white overflow-x-hidden;
-    background-image: 
-      radial-gradient(circle at 50% 0%, rgba(14, 165, 233, 0.1) 0%, transparent 50%),
-      radial-gradient(circle at 0% 100%, rgba(14, 165, 233, 0.05) 0%, transparent 40%);
-    background-attachment: fixed;
+    @apply bg-deep-space text-slate-300 antialiased selection:bg-neon-cyan/30 selection:text-white overflow-x-hidden;
+    font-feature-settings: "ss01", "ss02", "cv01", "cv02";
   }
 
   h1, h2, h3, h4 {
-    @apply tracking-tight text-white;
+    @apply tracking-[0.2em] uppercase font-black text-white;
   }
 }
 
 @layer components {
-  .glass-card {
-    @apply bg-dark-surface/40 backdrop-blur-xl border border-white/5 rounded-3xl shadow-2xl transition-all duration-500;
+  .hud-card {
+    @apply relative bg-carbon-900/40 backdrop-blur-3xl border border-glass-border rounded-3xl overflow-hidden transition-all duration-500;
+    box-shadow: 
+      0 0 40px rgba(0, 0, 0, 0.5),
+      inset 0 0 1px 1px rgba(255, 255, 255, 0.05);
   }
   
-  .glass-card:hover {
-    @apply border-white/10 bg-dark-surface/60 shadow-brand-primary/5;
+  .hud-card::before {
+    content: '';
+    @apply absolute inset-0 opacity-10 pointer-events-none;
+    background-image: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06));
+    background-size: 100% 2px, 3px 100%;
   }
 
-  .premium-button {
-    @apply relative overflow-hidden px-6 py-3 rounded-2xl font-bold text-sm transition-all duration-300 active:scale-95;
+  .hud-card:hover {
+    @apply border-neon-cyan/30 bg-carbon-900/60;
+    box-shadow: 
+      0 0 60px rgba(34, 211, 238, 0.05),
+      inset 0 0 1px 1px rgba(255, 255, 255, 0.1);
   }
 
-  .glow-text {
-    text-shadow: 0 0 20px rgba(14, 165, 233, 0.5);
+  .neon-glow-cyan {
+    filter: drop-shadow(0 0 8px rgba(34, 211, 238, 0.5));
+  }
+
+  .neon-glow-amber {
+    filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.5));
+  }
+
+  .neon-glow-danger {
+    filter: drop-shadow(0 0 8px rgba(244, 63, 94, 0.5));
+  }
+
+  .cyber-button {
+    @apply relative px-8 py-3 bg-neon-cyan/10 border border-neon-cyan/20 rounded-xl font-black text-xs tracking-[0.3em] uppercase text-neon-cyan transition-all duration-300 hover:bg-neon-cyan/20 hover:border-neon-cyan/40 hover:scale-[1.02] active:scale-95;
+  }
+
+  .data-value {
+    @apply font-mono text-4xl font-bold tracking-tighter;
+  }
+
+  .data-label {
+    @apply text-[10px] font-black uppercase tracking-[0.4em] text-slate-500 mb-2 block;
   }
 }
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 4px;
 }
 
 ::-webkit-scrollbar-track {
-  @apply bg-dark-bg;
+  @apply bg-deep-space;
 }
 
 ::-webkit-scrollbar-thumb {
-  @apply bg-white/10 rounded-full hover:bg-white/20 transition-colors;
+  @apply bg-neon-cyan/20 rounded-full hover:bg-neon-cyan/40 transition-colors;
 }
 
-/* Animations */
-@keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-10px); }
-}
-
-.animate-float {
-  animation: float 6s ease-in-out infinite;
-}
