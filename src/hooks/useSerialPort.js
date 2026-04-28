@@ -13,8 +13,11 @@ export const useSerialPort = () => {
     sats: 0
   });
 
+  const [history, setHistory] = useState([]);
   const portRef = useRef(null);
   const readerRef = useRef(null);
+
+  const clearHistory = () => setHistory([]);
 
   const connect = async () => {
     try {
@@ -108,7 +111,9 @@ export const useSerialPort = () => {
     });
 
     if (updated) {
+      const entry = { ...newData, timestamp: new Date().toLocaleTimeString(), id: Date.now() };
       setData(prev => ({ ...prev, ...newData }));
+      setHistory(prev => [entry, ...prev].slice(0, 100));
     }
   };
 
@@ -118,5 +123,5 @@ export const useSerialPort = () => {
     };
   }, []);
 
-  return { isConnected, data, error, connect, disconnect };
+  return { isConnected, data, history, error, connect, disconnect, clearHistory };
 };

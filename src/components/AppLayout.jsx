@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Map, User, MessageSquare, HelpCircle, LogOut, Sun, Moon, Rocket, Siren } from 'lucide-react';
+import { LayoutGrid, Map, User, MessageSquare, HelpCircle, LogOut, Sun, Moon, Rocket, Siren, Terminal } from 'lucide-react';
 import { useTheme, ThemeProvider } from './ThemeContext';
 import { useAuth } from './AuthContext';
 import { useSos } from './SosContext';
@@ -27,6 +27,7 @@ function LayoutContent({ children }) {
   const navItems = [
     { path: '/', icon: LayoutGrid, label: 'DASHBOARD' },
     { path: '/history', icon: Map, label: 'GPS_HISTORY' },
+    { path: '/serial-history', icon: Terminal, label: 'SERIAL_LOGS' },
     { path: '/profile', icon: User, label: 'OPERATOR' },
     { path: '/feedback', icon: MessageSquare, label: 'FEEDBACK' },
     { path: '/support', icon: HelpCircle, label: 'SUPPORT' },

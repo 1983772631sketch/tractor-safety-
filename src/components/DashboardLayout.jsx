@@ -41,7 +41,7 @@ export const DashboardLayout = ({ headerActions, main, mode, setMode }) => {
             className="flex flex-wrap items-center gap-6"
           >
             <div className="flex items-center gap-2 p-1.5 bg-carbon-900/60 backdrop-blur-xl rounded-2xl border border-glass-border">
-              {['demo', 'api', 'serial'].map((m) => (
+              {['demo', 'serial'].map((m) => (
                 <button
                   key={m}
                   onClick={() => setMode(m)}
