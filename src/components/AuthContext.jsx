@@ -1,78 +1,20 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [user, setUser] = useState(null);
-  const [token, setToken] = useState(localStorage.getItem('tractor_token'));
-  const [loading, setLoading] = useState(true);
+  // Always authenticated "fake" user
+  const [user] = useState({
+    id: 'operator-001',
+    username: 'operator',
+    role: 'operator',
+    name: 'Operator'
+  });
+  const [token] = useState('fake-token-bypass');
+  const [loading] = useState(false);
 
-  useEffect(() => {
-    const savedUser = localStorage.getItem('tractor_user');
-    if (savedUser && token) {
-      // eslint-disable-next-line react-hooks/set-state-in-effect
-      setUser(JSON.parse(savedUser));
-    }
-    setLoading(false);
-  }, [token]);
-
-  const login = async (username, password) => {
-    try {
-      const res = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        const userData = {
-          id: data.user.id,
-          username: data.user.username,
-          role: 'operator',
-          name: data.user.username.charAt(0).toUpperCase() + data.user.username.slice(1)
-        };
-
-        setToken(data.token);
-        setUser(userData);
-        localStorage.setItem('tractor_token', data.token);
-        localStorage.setItem('tractor_user', JSON.stringify(userData));
-        return { success: true };
-      } else {
-        return { success: false, error: data.error || 'Invalid credentials' };
-      }
-    } catch (err) {
-      return { success: false, error: 'Server unavailable. Please ensure the backend is running.' };
-    }
-  };
-
-  const signup = async (username, password) => {
-    try {
-      const res = await fetch('/api/auth/signup', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ username, password })
-      });
-
-      const data = await res.json();
-
-      if (res.ok) {
-        return { success: true };
-      } else {
-        return { success: false, error: data.error || 'Registration failed' };
-      }
-    } catch (err) {
-      return { success: false, error: 'Server unavailable. Please ensure the backend is running.' };
-    }
-  };
-
-  const logout = () => {
-    setToken(null);
-    setUser(null);
-    localStorage.removeItem('tractor_token');
-    localStorage.removeItem('tractor_user');
-  };
+  const login = () => ({ success: true });
+  const logout = () => {};
 
   const authenticatedFetch = async (url, options = {}) => {
     return fetch(url, {
@@ -85,7 +27,7 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, token, loading, login, signup, logout, authenticatedFetch }}>
+    <AuthContext.Provider value={{ user, token, loading, login, logout, authenticatedFetch }}>
       {children}
     </AuthContext.Provider>
   );

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Map, User, MessageSquare, HelpCircle, LogOut, Sun, Moon, Rocket, Siren, Terminal } from 'lucide-react';
+import { LayoutGrid, Map, User, MessageSquare, HelpCircle, Sun, Moon, Rocket, Siren, Terminal } from 'lucide-react';
 import { useTheme, ThemeProvider } from './ThemeContext';
 import { useAuth } from './AuthContext';
 import { useSos } from './SosContext';
@@ -18,12 +18,6 @@ function LayoutContent({ children }) {
   const { user } = useAuth();
   const { isSosActive, toggleSos } = useSos();
   const location = useLocation();
-  const isLoginPage = location.pathname === '/login';
-
-  if (isLoginPage) {
-    return children;
-  }
-
   const navItems = [
     { path: '/', icon: LayoutGrid, label: 'DASHBOARD' },
     { path: '/history', icon: Map, label: 'GPS_HISTORY' },
@@ -93,17 +87,6 @@ function LayoutContent({ children }) {
               {isSosActive ? 'DISABLE_SOS' : 'ENABLE_SOS'}
             </div>
           </button>
-
-          <Link 
-            to="/logout"
-            className="p-3 rounded-xl text-slate-500 hover:text-neon-danger hover:bg-neon-danger/10 transition-colors group relative cursor-pointer"
-          >
-            <LogOut size={24} />
-            <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-[var(--color-text-heading)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-              SYSTEM_LOGOUT
-            </div>
-          </Link>
-
         </div>
       </nav>
 
