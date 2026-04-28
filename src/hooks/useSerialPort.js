@@ -69,7 +69,7 @@ export const useSerialPort = () => {
         
         if (value) {
           buffer += value;
-          const lines = buffer.split('\\n');
+          const lines = buffer.split('\n');
           // Keep the last partial line in the buffer
           buffer = lines.pop();
 

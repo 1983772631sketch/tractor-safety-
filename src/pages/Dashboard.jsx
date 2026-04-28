@@ -5,7 +5,7 @@ import { StatusRing } from '../components/StatusRing';
 import { PowerGraph } from '../components/PowerGraph';
 import { GpsCard } from '../components/GpsCard';
 import { AlertSystem } from '../components/AlertSystem';
-import { Plug, AlertCircle, Power, Eye, EyeOff } from 'lucide-react';
+import { Plug, AlertCircle, Power, Eye, EyeOff, Wifi, WifiOff } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export function Dashboard() {
@@ -65,6 +65,21 @@ export function Dashboard() {
                 {sensors.power ? <Eye size={14} /> : <EyeOff size={14} />}
               </button>
             </div>
+
+            {mode === 'wifi' && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className={`flex items-center gap-3 px-6 py-3 rounded-xl border text-[10px] font-black tracking-[0.2em] uppercase ${
+                  isConnected
+                    ? 'text-neon-emerald bg-neon-emerald/10 border-neon-emerald/30'
+                    : 'text-neon-danger bg-neon-danger/10 border-neon-danger/30 animate-pulse'
+                }`}
+              >
+                {isConnected ? <Wifi size={14} /> : <WifiOff size={14} />}
+                {isConnected ? 'WIFI_LINKED' : 'WIFI_OFFLINE'}
+              </motion.div>
+            )}
 
             <button
               onClick={isConnected ? disconnect : connect}
