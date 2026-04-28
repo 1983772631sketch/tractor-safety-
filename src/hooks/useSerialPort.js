@@ -53,7 +53,7 @@ export const useSerialPort = () => {
 
   const readLoop = async (port) => {
     const textDecoder = new TextDecoderStream();
-    const readableStreamClosed = port.readable.pipeTo(textDecoder.writable);
+    await port.readable.pipeTo(textDecoder.writable);
     const reader = textDecoder.readable.getReader();
     readerRef.current = reader;
 

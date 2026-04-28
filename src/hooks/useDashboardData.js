@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useSerialPort } from './useSerialPort';
+import { useAuth } from '../components/AuthContext';
 
 export const useDashboardData = () => {
   const [mode, setMode] = useState('demo'); // 'serial', 'api', 'demo'
   const serial = useSerialPort();
+  const { authenticatedFetch, token } = useAuth();
   const [apiData, setApiData] = useState({
     loader: 0,
     obstacle: 0,
@@ -20,7 +22,7 @@ export const useDashboardData = () => {
       const interval = setInterval(() => {
         setApiData(prev => ({
           ...prev,
-          loader: 150 + Math.sin(Date.now() / 1000) * 50 + Math.random() * 10,
+          loader: 100 + Math.sin(Date.now() / 1000) * 80 + Math.random() * 5,
           obstacle: 250 + Math.cos(Date.now() / 1500) * 100 + Math.random() * 20,
           zmpt: Math.random() > 0.9 ? Math.random() * 100 : Math.random() * 5,
           sats: Math.floor(6 + Math.random() * 4)
@@ -32,10 +34,10 @@ export const useDashboardData = () => {
 
   // Real Backend API Mode
   useEffect(() => {
-    if (mode === 'api') {
+    if (mode === 'api' && token) {
       const fetchData = async () => {
         try {
-          const response = await fetch('/api/telemetry');
+          const response = await authenticatedFetch('http://localhost:3001/api/telemetry');
           if (!response.ok) throw new Error('API not reachable');
           const json = await response.json();
           
@@ -54,7 +56,8 @@ export const useDashboardData = () => {
       const interval = setInterval(fetchData, 1000);
       return () => clearInterval(interval);
     }
-  }, [mode]);
+  }, [mode, token, authenticatedFetch]);
+
 
   const data = mode === 'serial' ? serial.data : apiData;
   const isConnected = mode === 'serial' ? serial.isConnected : true;

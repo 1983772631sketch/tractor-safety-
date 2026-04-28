@@ -1,5 +1,4 @@
-import React from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 
 export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThreshold = 150, criticalThreshold = 50 }) => {
   const percentage = Math.min(Math.max((value / max) * 100, 0), 100);
@@ -36,8 +35,8 @@ export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThresh
             {status}
           </div>
         </div>
-        <div className="p-2 bg-white/5 rounded-lg border border-white/5 group-hover:border-white/10 transition-colors">
-          <div className="text-[10px] font-mono text-slate-500">REF_VAL: {max}</div>
+        <div className="p-2 bg-glass-white rounded-lg border border-glass-border group-hover:border-neon-cyan/20 transition-colors">
+          <div className="text-[10px] font-mono text-[var(--color-text-dim)]">REF_VAL: {max}</div>
         </div>
       </div>
       
@@ -59,7 +58,7 @@ export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThresh
             cx="96"
             cy="96"
             r={radius + 8}
-            className="stroke-white/5"
+            className="stroke-glass-border"
             strokeWidth="1"
             fill="none"
           />
@@ -90,7 +89,7 @@ export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThresh
               y2="48"
               stroke="currentColor"
               strokeWidth="2"
-              className="text-slate-800"
+              className="text-[var(--color-text-border)]"
               transform={`rotate(${i * 30} 96 96)`}
             />
           ))}
@@ -98,23 +97,16 @@ export const StatusRing = ({ label, value, max = 300, unit = 'cm', warningThresh
         
         {/* Center Content */}
         <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={value}
-              initial={{ opacity: 0, scale: 0.5, filter: 'blur(10px)' }}
-              animate={{ opacity: 1, scale: 1, filter: 'blur(0px)' }}
-              exit={{ opacity: 0, scale: 1.5, filter: 'blur(10px)' }}
-              className="flex flex-col items-center"
-            >
-              <span className={`data-value ${textColor} drop-shadow-2xl`}>
-                {value.toFixed(0)}
-              </span>
-              <span className="text-[10px] font-black text-slate-500 tracking-[0.4em] uppercase -mt-1">
-                {unit}
-              </span>
-            </motion.div>
-          </AnimatePresence>
+          <div className="flex flex-col items-center">
+            <span className={`data-value ${textColor} drop-shadow-2xl`}>
+              {value.toFixed(0)}
+            </span>
+            <span className="text-[10px] font-black text-[var(--color-text-dim)] tracking-[0.4em] uppercase -mt-1">
+              {unit}
+            </span>
+          </div>
         </div>
+
       </div>
 
       {/* Decorative HUD bar at bottom */}

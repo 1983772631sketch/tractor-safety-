@@ -1,29 +1,30 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { ShieldCheck, User, Lock, ArrowRight, Loader2 } from 'lucide-react';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { User, Lock, Loader2, Rocket } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../components/AuthContext';
 
-export function Login() {
+export function Signup() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { signup } = useAuth();
   const navigate = useNavigate();
-  const location = useLocation();
-  const message = location.state?.message;
 
-  const handleLogin = async (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    if (password !== confirmPassword) return setError('Passwords do not match');
+    
     setLoading(true);
     setError('');
-
-    const result = await login(username, password);
+    
+    const result = await signup(username, password);
     if (result.success) {
-      navigate('/');
+      navigate('/login', { state: { message: 'Account created! Please login.' } });
     } else {
-      setError(result.error || 'Authentication failed');
+      setError(result.error || 'Signup failed');
       setLoading(false);
     }
   };
@@ -44,21 +45,15 @@ export function Login() {
         <div className="hud-card p-10 backdrop-blur-3xl border-neon-cyan/30">
           <div className="text-center mb-10">
             <div className="inline-flex p-4 bg-neon-cyan/10 rounded-2xl border border-neon-cyan/20 mb-6 neon-glow-cyan">
-              <ShieldCheck size={40} className="text-neon-cyan" />
+              <Rocket size={40} className="text-neon-cyan" />
             </div>
             <h1 className="text-3xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-heading)] to-neon-cyan/50">
-              CORE_AUTHENTICATION
+              CORE_REGISTRATION
             </h1>
-            <p className="text-[10px] font-black tracking-[0.4em] text-[var(--color-text-dim)] uppercase mt-2">Secure Operator Uplink</p>
+            <p className="text-[10px] font-black tracking-[0.4em] text-[var(--color-text-dim)] uppercase mt-2">Create New Operator Access</p>
           </div>
 
-          {message && (
-            <div className="mb-6 p-3 bg-neon-emerald/10 border border-neon-emerald/30 rounded-lg text-neon-emerald text-[10px] font-black tracking-widest text-center uppercase">
-              {message}
-            </div>
-          )}
-
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleSubmit} className="space-y-6">
             <div className="space-y-2">
               <label className="data-label ml-1">USER_IDENTIFIER</label>
               <div className="relative group">
@@ -89,6 +84,21 @@ export function Login() {
               </div>
             </div>
 
+            <div className="space-y-2">
+              <label className="data-label ml-1">CONFIRM_KEY</label>
+              <div className="relative group">
+                <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-neon-cyan/50 group-focus-within:text-neon-cyan transition-colors" size={18} />
+                <input 
+                  type="password" 
+                  required
+                  value={confirmPassword}
+                  onChange={(e) => setConfirmPassword(e.target.value)}
+                  className="w-full bg-carbon-800/50 border border-glass-border rounded-xl py-4 pl-12 pr-4 text-[var(--color-text-main)] font-mono focus:outline-none focus:border-neon-cyan/50 focus:bg-neon-cyan/5 transition-all"
+                  placeholder="CONFIRM_PASSWORD"
+                />
+              </div>
+            </div>
+
             {error && (
               <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="text-neon-danger text-[10px] font-black tracking-widest uppercase bg-neon-danger/10 p-3 rounded-lg border border-neon-danger/20 text-center">
                 ACCESS_DENIED: {error}
@@ -100,14 +110,14 @@ export function Login() {
               disabled={loading}
               className="cyber-button w-full flex items-center justify-center gap-4 py-4 group"
             >
-              {loading ? <Loader2 className="animate-spin" size={20} /> : <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />}
-              <span className="text-sm">{loading ? 'VERIFYING...' : 'INITIALIZE_SESSION'}</span>
+              {loading ? <Loader2 className="animate-spin" size={20} /> : <Rocket size={20} className="group-hover:translate-x-1 transition-transform" />}
+              <span className="text-sm">{loading ? 'INITIALIZING...' : 'CREATE_OPERATOR'}</span>
             </button>
           </form>
 
-          <div className="mt-8 text-center border-t border-glass-border pt-6">
+          <div className="mt-8 text-center">
             <p className="text-[10px] font-black tracking-widest text-[var(--color-text-dim)] uppercase">
-              Need access? <Link to="/signup" className="text-neon-cyan hover:underline ml-2">REGISTER_OPERATOR</Link>
+              Already have an ID? <Link to="/login" className="text-neon-cyan hover:underline ml-2">AUTHENTICATE_HERE</Link>
             </p>
           </div>
         </div>

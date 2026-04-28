@@ -1,8 +1,7 @@
-import React from 'react';
-import { Activity, ShieldCheck, Database, LayoutGrid, Terminal, Cpu } from 'lucide-react';
+import { ShieldCheck, Database, LayoutGrid, Terminal, Cpu } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-export const DashboardLayout = ({ children, mode, setMode }) => {
+export const DashboardLayout = ({ headerActions, main, mode, setMode }) => {
   return (
     <div className="p-4 md:p-8 lg:p-12">
       <div className="max-w-[1600px] mx-auto">
@@ -17,15 +16,15 @@ export const DashboardLayout = ({ children, mode, setMode }) => {
                 <ShieldCheck className="text-neon-cyan" size={32} />
               </div>
               <div>
-                <h1 className="text-4xl lg:text-5xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-neon-cyan/50">
+                <h1 className="text-4xl lg:text-5xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-heading)] via-[var(--color-text-heading)] to-neon-cyan/50">
                   TRACTOR SAFETY SYSTEM
                 </h1>
-                <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.3em] text-slate-500 mt-1">
+                <div className="flex items-center gap-4 text-[10px] font-black tracking-[0.3em] text-[var(--color-text-dim)] mt-1">
                   <span className="flex items-center gap-2">
                     <div className="w-2 h-2 rounded-full bg-neon-emerald animate-pulse" />
                     CORE_OS SYSTEM_LIVE
                   </span>
-                  <span className="text-slate-800">|</span>
+                  <span className="text-[var(--color-text-border)]">|</span>
                   <span className="flex items-center gap-2 uppercase">
                     <Database size={10} />
                     DB_V4.8.5_STABLE
@@ -50,7 +49,7 @@ export const DashboardLayout = ({ children, mode, setMode }) => {
                     px-6 py-2.5 rounded-xl text-[10px] font-black transition-all duration-300 uppercase tracking-[0.3em]
                     ${mode === m 
                       ? 'bg-neon-cyan text-deep-space shadow-[0_0_20px_rgba(34,211,238,0.4)] scale-105' 
-                      : 'text-slate-500 hover:text-slate-300 hover:bg-white/5'
+                      : 'text-[var(--color-text-dim)] hover:text-[var(--color-text-main)] hover:bg-white/5'
                     }
                   `}
                 >
@@ -59,7 +58,7 @@ export const DashboardLayout = ({ children, mode, setMode }) => {
               ))}
             </div>
 
-            {children.headerActions}
+            {headerActions}
           </motion.div>
         </header>
 
@@ -69,13 +68,13 @@ export const DashboardLayout = ({ children, mode, setMode }) => {
           transition={{ duration: 1, delay: 0.4, ease: "easeOut" }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
         >
-          {children.main}
+          {main}
         </motion.main>
         
-        <footer className="mt-20 flex flex-col md:flex-row items-center justify-between border-t border-glass-border pt-10 text-[10px] font-black tracking-[0.5em] text-slate-700 uppercase pb-10">
+        <footer className="mt-20 flex flex-col md:flex-row items-center justify-between border-t border-glass-border pt-10 text-[10px] font-black tracking-[0.5em] text-[var(--color-text-dim)] uppercase pb-10">
           <div className="flex items-center gap-8 mb-4 md:mb-0">
             <span>© 2026 ANTIGRAVITY</span>
-            <span className="hidden md:inline text-slate-800">|</span>
+            <span className="hidden md:inline text-[var(--color-text-border)]">|</span>
             <span>SECURE_DATA_STREAM_ENCRYPTED</span>
           </div>
           <div className="flex items-center gap-4">

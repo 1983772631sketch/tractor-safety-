@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { User, Shield, Activity, Key } from 'lucide-react';
 
@@ -8,7 +7,7 @@ export function Profile() {
       <div className="max-w-4xl mx-auto">
         <header className="mb-12">
           <motion.div initial={{ x: -50, opacity: 0 }} animate={{ x: 0, opacity: 1 }} transition={{ duration: 0.8 }}>
-            <h1 className="text-4xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-white via-white to-neon-cyan/50">
+            <h1 className="text-4xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-heading)] via-[var(--color-text-heading)] to-neon-cyan/50">
               OPERATOR_PROFILE
             </h1>
             <p className="text-[10px] font-black tracking-[0.3em] text-slate-500 mt-2">ID: OP-7734-X | CLEARANCE: ALPHA</p>
@@ -23,7 +22,7 @@ export function Profile() {
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.2)_1px,transparent_1px)] bg-[size:100%_4px] opacity-30" />
               </div>
               <div>
-                <h2 className="text-2xl font-black tracking-widest text-white">JOHN_DOE</h2>
+                <h2 className="text-2xl font-black tracking-widest text-[var(--color-text-heading)]">JOHN_DOE</h2>
                 <div className="flex items-center gap-2 mt-2 text-[10px] font-black tracking-[0.2em] text-neon-emerald">
                   <Shield size={12} /> STATUS: ACTIVE_DUTY
                 </div>
@@ -33,15 +32,15 @@ export function Profile() {
             <div className="space-y-6">
               <div>
                 <span className="data-label">ASSIGNED_UNIT</span>
-                <p className="text-lg font-mono font-bold text-white">TRACTOR_X1_HEAVY</p>
+                <p className="text-lg font-mono font-bold text-[var(--color-text-main)]">TRACTOR_X1_HEAVY</p>
               </div>
               <div>
                 <span className="data-label">TOTAL_HOURS_LOGGED</span>
-                <p className="text-lg font-mono font-bold text-white">1,452.8 HRS</p>
+                <p className="text-lg font-mono font-bold text-[var(--color-text-main)]">1,452.8 HRS</p>
               </div>
               <div>
                 <span className="data-label">LAST_CERTIFICATION</span>
-                <p className="text-lg font-mono font-bold text-white">2026.03.15</p>
+                <p className="text-lg font-mono font-bold text-[var(--color-text-main)]">2026.03.15</p>
               </div>
             </div>
           </motion.div>
@@ -52,7 +51,7 @@ export function Profile() {
                 <Key className="text-neon-amber" size={24} />
               </div>
               <div>
-                <h3 className="text-sm font-black tracking-widest text-white uppercase">Security Clearance</h3>
+                <h3 className="text-sm font-black tracking-widest text-[var(--color-text-heading)] uppercase">Security Clearance</h3>
                 <p className="text-[10px] font-bold text-slate-500 uppercase mt-1">Level 4 Autonomous Override</p>
               </div>
             </div>
@@ -62,7 +61,7 @@ export function Profile() {
                 <Activity className="text-neon-emerald" size={24} />
               </div>
               <div>
-                <h3 className="text-sm font-black tracking-widest text-white uppercase">Biometric Status</h3>
+                <h3 className="text-sm font-black tracking-widest text-[var(--color-text-heading)] uppercase">Biometric Status</h3>
                 <p className="text-[10px] font-bold text-slate-500 uppercase mt-1">Heart Rate: 72bpm | Stress: Low</p>
               </div>
             </div>

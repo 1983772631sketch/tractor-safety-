@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { AlertTriangle, ShieldAlert, Zap, Skull } from 'lucide-react';
+import { AlertTriangle, Zap, Skull } from 'lucide-react';
 
 export const AlertSystem = ({ loader, obstacle, zmpt }) => {
   const alerts = [];
@@ -32,7 +31,7 @@ export const AlertSystem = ({ loader, obstacle, zmpt }) => {
         )}
       </AnimatePresence>
 
-      <div className="fixed top-12 left-1/2 transform -translate-x-1/2 z-[70] flex flex-col gap-4 w-full max-w-2xl px-6 pointer-events-none">
+      <div className="fixed top-6 right-6 z-[70] flex flex-col gap-4 w-full max-w-md pointer-events-none">
         <AnimatePresence>
           {alerts.map(alert => {
             const Icon = alert.icon;

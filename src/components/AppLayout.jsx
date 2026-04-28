@@ -1,9 +1,22 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Link, useLocation } from 'react-router-dom';
-import { LayoutGrid, Map, User, MessageSquare, HelpCircle, LogOut } from 'lucide-react';
+import { LayoutGrid, Map, User, MessageSquare, HelpCircle, LogOut, Sun, Moon, Rocket, Siren } from 'lucide-react';
+import { useTheme, ThemeProvider } from './ThemeContext';
+import { useAuth } from './AuthContext';
+import { useSos } from './SosContext';
 
 export function AppLayout({ children }) {
+  return (
+    <ThemeProvider>
+      <LayoutContent>{children}</LayoutContent>
+    </ThemeProvider>
+  );
+}
+
+function LayoutContent({ children }) {
+  const { theme, toggleTheme } = useTheme();
+  const { logout } = useAuth();
+  const { isSosActive, toggleSos } = useSos();
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
 
@@ -17,10 +30,11 @@ export function AppLayout({ children }) {
     { path: '/profile', icon: User, label: 'OPERATOR' },
     { path: '/feedback', icon: MessageSquare, label: 'FEEDBACK' },
     { path: '/support', icon: HelpCircle, label: 'SUPPORT' },
+    { path: '/upgrades', icon: Rocket, label: 'UPGRADES' },
   ];
 
   return (
-    <div className="flex h-screen bg-deep-space text-slate-300 selection:bg-neon-cyan/30 selection:text-white overflow-hidden">
+    <div className="flex h-screen bg-deep-space text-[var(--color-text-main)] selection:bg-neon-cyan/30 selection:text-white overflow-hidden">
       {/* Animated Mesh Gradient Background (Global) */}
       <div className="absolute inset-0 z-0 opacity-20 pointer-events-none">
         <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] rounded-full bg-neon-cyan/20 blur-[120px] animate-pulse" />
@@ -58,12 +72,38 @@ export function AppLayout({ children }) {
           })}
         </div>
 
-        <Link to="/login" className="p-3 rounded-xl text-slate-500 hover:text-neon-danger hover:bg-neon-danger/10 transition-colors group relative">
-          <LogOut size={24} />
-          <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-white opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
-            SYSTEM_LOGOUT
-          </div>
-        </Link>
+        <div className="flex flex-col gap-4 items-center">
+          <button 
+            onClick={toggleTheme}
+            className="p-3 rounded-xl text-slate-500 hover:text-neon-cyan hover:bg-neon-cyan/10 transition-colors group relative"
+          >
+            {theme === 'dark' ? <Sun size={24} /> : <Moon size={24} />}
+            <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-[var(--color-text-heading)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+              {theme === 'dark' ? 'LIGHT_MODE' : 'DARK_MODE'}
+            </div>
+          </button>
+
+          <button 
+            onClick={toggleSos}
+            className={`p-3 rounded-xl transition-all duration-300 group relative ${isSosActive ? 'text-white bg-neon-danger shadow-[0_0_20px_rgba(239,68,68,0.5)] animate-pulse' : 'text-slate-500 hover:text-neon-danger hover:bg-neon-danger/10'}`}
+          >
+            <Siren size={24} className={isSosActive ? 'animate-bounce' : ''} />
+            <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-[var(--color-text-heading)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+              {isSosActive ? 'DISABLE_SOS' : 'ENABLE_SOS'}
+            </div>
+          </button>
+
+          <button 
+            onClick={logout}
+            className="p-3 rounded-xl text-slate-500 hover:text-neon-danger hover:bg-neon-danger/10 transition-colors group relative cursor-pointer"
+          >
+            <LogOut size={24} />
+            <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-[var(--color-text-heading)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
+              SYSTEM_LOGOUT
+            </div>
+          </button>
+
+        </div>
       </nav>
 
       {/* Main Content Area */}

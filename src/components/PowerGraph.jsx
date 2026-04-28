@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState, useMemo } from 'react';
 import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 import { Zap, Activity, AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -7,11 +7,15 @@ export const PowerGraph = ({ value }) => {
   const [data, setData] = useState(Array.from({ length: 60 }, (_, i) => ({ time: i, value: 0 })));
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setData(prev => {
       const newData = [...prev.slice(1), { time: prev[prev.length - 1].time + 1, value }];
       return newData;
     });
   }, [value]);
+
+  // eslint-disable-next-line react-hooks/purity
+  const barHeights = useMemo(() => [1, 2, 3, 4].map(() => Math.random() * 24 + 8), []);
 
   const isPowerDetected = value > 10;
   const color = isPowerDetected ? 'var(--color-neon-danger)' : 'var(--color-neon-cyan)';
@@ -62,7 +66,7 @@ export const PowerGraph = ({ value }) => {
       <div className="flex-grow w-full relative">
         {/* Background Grid Decoration */}
         <div className="absolute inset-0 z-0 opacity-10 pointer-events-none">
-          <div className="h-full w-full bg-[linear-gradient(to_right,#ffffff1a_1px,transparent_1px),linear-gradient(to_bottom,#ffffff1a_1px,transparent_1px)] bg-[size:40px_40px]" />
+          <div className="h-full w-full bg-[linear-gradient(to_right,var(--color-text-dim)_1px,transparent_1px),linear-gradient(to_bottom,var(--color-text-dim)_1px,transparent_1px)] bg-[size:40px_40px]" />
         </div>
 
         <div className="relative z-10 w-full h-full min-h-[200px]">
@@ -74,7 +78,7 @@ export const PowerGraph = ({ value }) => {
                   <stop offset="95%" stopColor={color} stopOpacity={0}/>
                 </linearGradient>
               </defs>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.03)" vertical={false} />
+              <CartesianGrid strokeDasharray="3 3" stroke="var(--color-glass-border)" vertical={false} />
               <XAxis hide />
               <YAxis hide domain={[0, 1000]} />
               <Tooltip 
@@ -82,7 +86,7 @@ export const PowerGraph = ({ value }) => {
                   if (active && payload && payload.length) {
                     return (
                       <div className="bg-carbon-900/90 backdrop-blur-md border border-glass-border p-3 rounded-xl shadow-2xl">
-                        <div className="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">Signal Strength</div>
+                        <div className="text-[10px] font-black text-[var(--color-text-dim)] uppercase tracking-widest mb-1">Signal Strength</div>
                         <div className={`text-xl font-mono font-bold ${textColor}`}>
                           {payload[0].value.toFixed(2)} <span className="text-[10px]">µV</span>
                         </div>
@@ -112,16 +116,16 @@ export const PowerGraph = ({ value }) => {
           <div className="data-label">Live Amplitude</div>
           <div className={`text-5xl font-mono font-black tracking-tighter ${textColor} flex items-baseline gap-2`}>
             {value.toFixed(1)}
-            <span className="text-sm font-sans text-slate-600 font-bold tracking-widest uppercase">RAW_FLUX</span>
+            <span className="text-sm font-sans text-[var(--color-text-dim)] font-bold tracking-widest uppercase">RAW_FLUX</span>
           </div>
         </div>
         
         <div className="hidden md:flex gap-4">
-          {[1, 2, 3, 4].map(i => (
+          {[1, 2, 3, 4].map((i, idx) => (
             <motion.div 
               key={i}
               className={`w-1 h-8 rounded-full ${isPowerDetected ? 'bg-neon-danger' : 'bg-neon-cyan'}`}
-              animate={{ height: [8, Math.random() * 24 + 8, 8] }}
+              animate={{ height: [8, barHeights[idx], 8] }}
               transition={{ duration: 1, repeat: Infinity, delay: i * 0.2 }}
               style={{ opacity: 0.2 + (i * 0.2) }}
             />

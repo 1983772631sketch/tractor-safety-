@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import { MapContainer, TileLayer, Polyline, Marker, Popup } from 'react-leaflet';
 import L from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { Map as MapIcon, Activity, AlertTriangle } from 'lucide-react';
+import { useAuth } from '../components/AuthContext';
 
 // Fix Leaflet's default icon issue in React
 delete L.Icon.Default.prototype._getIconUrl;
@@ -25,11 +26,14 @@ export function MapHistory() {
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const { authenticatedFetch, token } = useAuth();
 
   useEffect(() => {
+    if (!token) return;
+
     const fetchHistory = async () => {
       try {
-        const response = await fetch('/api/telemetry/history');
+        const response = await authenticatedFetch('http://localhost:3001/api/telemetry/history');
         if (!response.ok) throw new Error('Failed to fetch history');
         const data = await response.json();
         
@@ -50,7 +54,8 @@ export function MapHistory() {
     // Refresh every 10 seconds
     const interval = setInterval(fetchHistory, 10000);
     return () => clearInterval(interval);
-  }, []);
+  }, [token, authenticatedFetch]);
+
 
   const coordinates = history.map(d => [parseFloat(d.lat), parseFloat(d.lng)]);
   const latestCoord = coordinates.length > 0 ? coordinates[coordinates.length - 1] : null;
