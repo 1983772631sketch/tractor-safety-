@@ -9,6 +9,7 @@ import { Upgrades } from './pages/Upgrades';
 import { SerialHistory } from './pages/SerialHistory';
 import { Login } from './pages/Login';
 import { Signup } from './pages/Signup';
+import { Logout } from './pages/Logout';
 import { AuthProvider, useAuth } from './components/AuthContext';
 import { SosProvider } from './components/SosContext';
 import { SerialProvider } from './components/SerialContext';
@@ -38,6 +39,7 @@ function App() {
                     <Route path="/support" element={<Support />} />
                     <Route path="/upgrades" element={<Upgrades />} />
                     <Route path="/serial-history" element={<SerialHistory />} />
+                    <Route path="/logout" element={<Logout />} />
                   </Routes>
                 </AppLayout>
               </ProtectedRoute>

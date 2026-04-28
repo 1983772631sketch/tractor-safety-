@@ -1,7 +1,12 @@
 import { motion } from 'framer-motion';
 import { User, Shield, Activity, Key } from 'lucide-react';
+import { useAuth } from '../components/AuthContext';
 
 export function Profile() {
+  const { user } = useAuth();
+  const displayName = user?.username?.toUpperCase() || 'UNKNOWN';
+  const operatorId = `OP-${String(user?.id || 0).padStart(4, '0')}-X`;
+
   return (
     <div className="p-4 md:p-8 lg:p-12">
       <div className="max-w-4xl mx-auto">
@@ -10,7 +15,7 @@ export function Profile() {
             <h1 className="text-4xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-heading)] via-[var(--color-text-heading)] to-neon-cyan/50">
               OPERATOR_PROFILE
             </h1>
-            <p className="text-[10px] font-black tracking-[0.3em] text-slate-500 mt-2">ID: OP-7734-X | CLEARANCE: ALPHA</p>
+            <p className="text-[10px] font-black tracking-[0.3em] text-slate-500 mt-2">ID: {operatorId} | CLEARANCE: ALPHA</p>
           </motion.div>
         </header>
 
@@ -22,7 +27,7 @@ export function Profile() {
                 <div className="absolute inset-0 bg-[linear-gradient(rgba(34,211,238,0.2)_1px,transparent_1px)] bg-[size:100%_4px] opacity-30" />
               </div>
               <div>
-                <h2 className="text-2xl font-black tracking-widest text-[var(--color-text-heading)]">JOHN_DOE</h2>
+                <h2 className="text-2xl font-black tracking-widest text-[var(--color-text-heading)]">{displayName}</h2>
                 <div className="flex items-center gap-2 mt-2 text-[10px] font-black tracking-[0.2em] text-neon-emerald">
                   <Shield size={12} /> STATUS: ACTIVE_DUTY
                 </div>

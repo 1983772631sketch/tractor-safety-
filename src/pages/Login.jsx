@@ -47,7 +47,7 @@ export function Login() {
               <ShieldCheck size={40} className="text-neon-cyan" />
             </div>
             <h1 className="text-3xl font-black tracking-[0.2em] italic bg-clip-text text-transparent bg-gradient-to-r from-[var(--color-text-heading)] to-neon-cyan/50">
-              CORE_AUTHENTICATION
+              TRACTOR_SAFETY
             </h1>
             <p className="text-[10px] font-black tracking-[0.4em] text-[var(--color-text-dim)] uppercase mt-2">Secure Operator Uplink</p>
           </div>

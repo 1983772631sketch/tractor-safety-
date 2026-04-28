@@ -15,7 +15,7 @@ export function AppLayout({ children }) {
 
 function LayoutContent({ children }) {
   const { theme, toggleTheme } = useTheme();
-  const { logout } = useAuth();
+  const { user } = useAuth();
   const { isSosActive, toggleSos } = useSos();
   const location = useLocation();
   const isLoginPage = location.pathname === '/login';
@@ -94,15 +94,15 @@ function LayoutContent({ children }) {
             </div>
           </button>
 
-          <button 
-            onClick={logout}
+          <Link 
+            to="/logout"
             className="p-3 rounded-xl text-slate-500 hover:text-neon-danger hover:bg-neon-danger/10 transition-colors group relative cursor-pointer"
           >
             <LogOut size={24} />
             <div className="absolute left-full ml-4 top-1/2 -translate-y-1/2 px-3 py-1.5 bg-carbon-800 border border-glass-border rounded text-[10px] font-black tracking-widest text-[var(--color-text-heading)] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-50">
               SYSTEM_LOGOUT
             </div>
-          </button>
+          </Link>
 
         </div>
       </nav>

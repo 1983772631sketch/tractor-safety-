@@ -17,29 +17,54 @@ export function AuthProvider({ children }) {
   }, [token]);
 
   const login = async (username, password) => {
-    // Fake authentication logic
-    if (username && password) {
-      const mockUser = {
-        id: '1',
-        username: username,
-        role: 'operator',
-        name: username.charAt(0).toUpperCase() + username.slice(1)
-      };
-      const mockToken = 'fake-jwt-token-' + Math.random().toString(36).substr(2);
-      
-      setToken(mockToken);
-      setUser(mockUser);
-      localStorage.setItem('tractor_token', mockToken);
-      localStorage.setItem('tractor_user', JSON.stringify(mockUser));
-      return { success: true };
-    } else {
-      return { success: false, error: 'Invalid credentials' };
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        const userData = {
+          id: data.user.id,
+          username: data.user.username,
+          role: 'operator',
+          name: data.user.username.charAt(0).toUpperCase() + data.user.username.slice(1)
+        };
+
+        setToken(data.token);
+        setUser(userData);
+        localStorage.setItem('tractor_token', data.token);
+        localStorage.setItem('tractor_user', JSON.stringify(userData));
+        return { success: true };
+      } else {
+        return { success: false, error: data.error || 'Invalid credentials' };
+      }
+    } catch (err) {
+      return { success: false, error: 'Server unavailable. Please ensure the backend is running.' };
     }
   };
 
-  const signup = async () => {
-    // Fake signup logic
-    return { success: true };
+  const signup = async (username, password) => {
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password })
+      });
+
+      const data = await res.json();
+
+      if (res.ok) {
+        return { success: true };
+      } else {
+        return { success: false, error: data.error || 'Registration failed' };
+      }
+    } catch (err) {
+      return { success: false, error: 'Server unavailable. Please ensure the backend is running.' };
+    }
   };
 
   const logout = () => {
